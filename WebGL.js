@@ -45,11 +45,24 @@ function main(){
         return ;
     }
 
-    // compile shader and use program
     var vertexShader = createShader(gl, gl.VERTEX_SHADER, VSHADER_SOURCE);
     var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, FSHADER_SOURCE);
     var program = createProgram(gl, vertexShader, fragmentShader);
     gl.useProgram(program);
+
+    var vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+    var a_Position = gl.getAttribLocation(program, 'a_Position');
+    var a_Color = gl.getAttribLocation(program, 'a_Color');
+
+    gl.enableVertexAttribArray(a_Position);
+    gl.enableVertexAttribArray(a_Color);
+
+    gl.program = program;
+    gl.vertexBuffer = vertexBuffer;
+    gl.a_Position = a_Position;
+    gl.a_Color = a_Color;
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
