@@ -24,15 +24,12 @@ var FSHADER_SOURCE = `
 
 
 
-var shapeFlag = 'p'; //p: point, h: hori line: v: verti line, t: triangle, q: square, c: circle
-var colorFlag = 'r'; //r g b 
-var g_points = [];
-var g_horiLines = [];
-var g_vertiLines = [];
+var shapeFlag = 'l';
+var colorFlag = 'r';
+var g_lines = [];
 var g_triangles = [];
-var g_squares = [];
+var g_diamonds = [];
 var g_circles = [];
-//var ... of course you may need more variables
 
 
 function main(){
@@ -67,7 +64,6 @@ function main(){
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    // mouse and key event...
     canvas.onmousedown = function(ev){click(ev, gl, program)};
     document.onkeydown = function(ev){keydown(ev, gl, program)};
 }
@@ -98,33 +94,138 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
 
 
-function keydown(ev){ //you may want to define more arguments for this function
-    //implment keydown event here
-
-    if(ev.key == 'r'){ //an example for user press 'r'... 
-        //......  
+function keydown(ev, gl, program){
+    if (ev.key === '1') {
+        shapeFlag = 'l';
+    } else if (ev.key === '2') {
+        shapeFlag = 't';
+    } else if (ev.key === '3') {
+        shapeFlag = 'd';
+    } else if (ev.key === '4') {
+        shapeFlag = 'c';
+    } else if (ev.key === 'r') {
+        colorFlag = 'r';
+    } else if (ev.key === 'g') {
+        colorFlag = 'g';
+    } else if (ev.key === 'b') {
+        colorFlag = 'b';
     }
 }
 
-function click(ev){ //you may want to define more arguments for this function
-    //mouse click: recall our quiz1 in calss
+function click(ev, gl, program){
+    var canvas = document.getElementById('webgl');
     var x = ev.clientX;
     var y = ev.clientY;
     var rect = ev.target.getBoundingClientRect();
 
-    x = ((x - rect.left) - canvas.height/2)/(canvas.height/2)
-    y = (canvas.width/2 - (y - rect.top))/(canvas.height/2)
+    x = ((x - rect.left) - canvas.width / 2) / (canvas.width / 2);
+    y = ((canvas.height - rect.top) - y) / (canvas.height / 2);
 
-    //you might want to do something here
+    var color = getColor();
 
-    //self-define draw() function
-    //I suggest that you can clear the canvas
-    //and redraw whole frame(canvas) after any mouse click
-    draw();
+    if (shapeFlag === 'l') {
+        addLine(x, y, color);
+    } else if (shapeFlag === 't') {
+        addTriangle(x, y, color);
+    } else if (shapeFlag === 'd') {
+        addDiamond(x, y, color);
+    } else if (shapeFlag === 'c') {
+        addCircle(x, y, color);
+    }
+
+    draw(gl, program);
+}
+
+function getColor() {
+    if (colorFlag === 'r') {
+        return [1.0, 0.0, 0.0, 1.0];
+    } else if (colorFlag === 'g') {
+        return [0.0, 1.0, 0.0, 1.0];
+    } else {
+        return [0.0, 0.0, 1.0, 1.0];
+    }
 }
 
 
-function draw(){ //you may want to define more arguments for this function
-    //redraw whole canvas here
-    //Note: you are only allowed to same shapes of this frame by single gl.drawArrays() call
+function draw(gl, program){
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    drawShapes(gl, g_lines, gl.LINES);
+    drawShapes(gl, g_triangles, gl.TRIANGLES);
+    drawShapes(gl, g_diamonds, gl.TRIANGLE_FAN);
+    drawShapes(gl, g_circles, gl.TRIANGLE_FAN);
+}
+
+function drawShapes(gl, shapes, mode) {
+    if (shapes.length === 0) return;
+
+    var vertices = [];
+    var i;
+    for (i = 0; i < shapes.length; i++) {
+        vertices = vertices.concat(shapes[i]);
+    }
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+    var FSIZE = vertices.BYTES_PER_ELEMENT;
+    gl.vertexAttribPointer(gl.a_Position, 2, gl.FLOAT, false, FSIZE * 6, 0);
+    gl.vertexAttribPointer(gl.a_Color, 4, gl.FLOAT, false, FSIZE * 6, FSIZE * 2);
+
+    gl.drawArrays(mode, 0, vertices.length / 6);
+}
+
+function addLine(x, y, color) {
+    var size = 0.1;
+    var vertices = [
+        x - size, y, color[0], color[1], color[2], color[3],
+        x + size, y, color[0], color[1], color[2], color[3]
+    ];
+    addToShapeArray(g_lines, vertices);
+}
+
+function addTriangle(x, y, color) {
+    var size = 0.1;
+    var vertices = [
+        x, y + size, color[0], color[1], color[2], color[3],
+        x - size, y - size, color[0], color[1], color[2], color[3],
+        x + size, y - size, color[0], color[1], color[2], color[3]
+    ];
+    addToShapeArray(g_triangles, vertices);
+}
+
+function addDiamond(x, y, color) {
+    var size = 0.1;
+    var vertices = [
+        x, y + size, color[0], color[1], color[2], color[3],
+        x + size, y, color[0], color[1], color[2], color[3],
+        x, y - size, color[0], color[1], color[2], color[3],
+        x - size, y, color[0], color[1], color[2], color[3]
+    ];
+    addToShapeArray(g_diamonds, vertices);
+}
+
+function addCircle(x, y, color) {
+    var vertices = [];
+    var radius = 0.1;
+    var segments = 30;
+    var i;
+    var angle;
+
+    vertices.push(x, y, color[0], color[1], color[2], color[3]);
+    for (i = 0; i <= segments; i++) {
+        angle = (i / segments) * 2 * Math.PI;
+        vertices.push(x + Math.cos(angle) * radius, y + Math.sin(angle) * radius,
+                      color[0], color[1], color[2], color[3]);
+    }
+
+    addToShapeArray(g_circles, vertices);
+}
+
+function addToShapeArray(array, vertices) {
+    array.push(vertices);
+    if (array.length > 3) {
+        array.shift();
+    }
 }
