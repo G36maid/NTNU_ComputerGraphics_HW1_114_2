@@ -46,13 +46,41 @@ function main(){
     }
 
     // compile shader and use program
+    var vertexShader = createShader(gl, gl.VERTEX_SHADER, VSHADER_SOURCE);
+    var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, FSHADER_SOURCE);
+    var program = createProgram(gl, vertexShader, fragmentShader);
+    gl.useProgram(program);
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     // mouse and key event...
-    canvas.onmousedown = function(ev){click(ev)};
-    document.onkeydown = function(ev){keydown(ev)};
+    canvas.onmousedown = function(ev){click(ev, gl, program)};
+    document.onkeydown = function(ev){keydown(ev, gl, program)};
+}
+
+function createShader(gl, type, source) {
+    var shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.log('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+    }
+    return shader;
+}
+
+function createProgram(gl, vertexShader, fragmentShader) {
+    var program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.log('Unable to initialize the shader program: ' + gl.getProgramInfoLog(program));
+        return null;
+    }
+    return program;
 }
 
 
