@@ -64,8 +64,8 @@ function main(){
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    canvas.onmousedown = function(ev){click(ev, gl, program)};
-    document.onkeydown = function(ev){keydown(ev, gl, program)};
+    canvas.onmousedown = function(ev){click(ev, gl)};
+    document.onkeydown = function(ev){keydown(ev)};
 }
 
 function createShader(gl, type, source) {
@@ -94,7 +94,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
 
 
-function keydown(ev, gl, program){
+function keydown(ev){
     if (ev.key === '1') {
         shapeFlag = 'l';
     } else if (ev.key === '2') {
@@ -112,7 +112,7 @@ function keydown(ev, gl, program){
     }
 }
 
-function click(ev, gl, program){
+function click(ev, gl){
     var canvas = document.getElementById('webgl');
     var x = ev.clientX;
     var y = ev.clientY;
@@ -133,7 +133,7 @@ function click(ev, gl, program){
         addCircle(x, y, color);
     }
 
-    draw(gl, program);
+    draw(gl);
 }
 
 function getColor() {
@@ -147,7 +147,7 @@ function getColor() {
 }
 
 
-function draw(gl, program){
+function draw(gl){
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
