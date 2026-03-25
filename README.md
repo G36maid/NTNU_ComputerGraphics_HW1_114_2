@@ -10,9 +10,7 @@ Simply open `index.html` in a modern web browser that supports WebGL (Chrome, Fi
 
 This project is deployed on GitHub Pages. You can access the live application at:
 
-```
-https://yourusername.github.io/NTNU_ComputerGraphics_HW1_114_2/
-```
+[https://G36maid.github.io/NTNU_ComputerGraphics_HW1_114_2/](https://G36maid.github.io/NTNU_ComputerGraphics_HW1_114_2/)
 
 The GitHub Pages deployment provides instant access to the application without any local setup required.
 
@@ -88,7 +86,7 @@ Late submissions will incur penalties according to the course policy.
 
 You must schedule a time with the TA to demonstrate your homework:
 
-1. **Book a 5-minute time slot**: [Sign up here](https://tinyurl.com/y5jcadve) before the Moodle submission deadline
+1. **Book a 5-minute time slot**: before the Moodle submission deadline
 2. **Bring your laptop** (or make a note if you won't when booking)
 3. **Arrive on time**
 4. **Location**: Room 109, Applied Science Building
@@ -106,7 +104,7 @@ You must schedule a time with the TA to demonstrate your homework:
 
 ### Option 1: GitHub Pages (Recommended)
 
-1. Visit the live deployment: `https://yourusername.github.io/NTNU_ComputerGraphics_HW1_114_2/`
+1. Visit the live deployment: [https://G36maid.github.io/NTNU_ComputerGraphics_HW1_114_2/](https://G36maid.github.io/NTNU_ComputerGraphics_HW1_114_2/)
 2. The application will load automatically in your browser
 3. No additional setup required
 
