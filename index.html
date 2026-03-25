@@ -1,16 +1,172 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>WebPage Title </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CSU0021 CG HW1 - WebGL Shape Drawer</title>
+        <style>
+            :root {
+                --primary-bg: #f4f4f9;
+                --card-bg: #ffffff;
+                --text-main: #333333;
+                --text-muted: #666666;
+                --accent: #4a90e2;
+                --border-color: #e0e0e0;
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--primary-bg);
+                color: var(--text-main);
+                margin: 0;
+                padding: 2rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: row;
+                gap: 2rem;
+                background: var(--card-bg);
+                padding: 2rem;
+                border-radius: 12px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+                max-width: 900px;
+                width: 100%;
+            }
+
+            .canvas-section {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            canvas {
+                border: 2px solid var(--text-main);
+                border-radius: 8px;
+                cursor: crosshair;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                background-color: #000; /* WebGL default clear color */
+            }
+
+            .instructions-section {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            h1 {
+                margin-top: 0;
+                font-size: 1.5rem;
+                color: var(--text-main);
+                border-bottom: 2px solid var(--border-color);
+                padding-bottom: 0.5rem;
+            }
+
+            h2 {
+                font-size: 1.1rem;
+                color: var(--accent);
+                margin-top: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            li {
+                margin-bottom: 0.8rem;
+                line-height: 1.5;
+                color: var(--text-muted);
+            }
+
+            kbd {
+                background-color: #eee;
+                border-radius: 4px;
+                border: 1px solid #b4b4b4;
+                box-shadow:
+                    0 1px 1px rgba(0, 0, 0, 0.2),
+                    0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+                color: #333;
+                display: inline-block;
+                font-family: monospace;
+                font-size: 0.9em;
+                font-weight: 700;
+                line-height: 1;
+                padding: 2px 6px;
+                white-space: nowrap;
+            }
+
+            .note {
+                margin-top: auto;
+                padding: 1rem;
+                background-color: #fff3cd;
+                border-left: 4px solid #ffc107;
+                border-radius: 4px;
+                font-size: 0.9rem;
+                color: #856404;
+            }
+
+            /* 響應式設計：小螢幕時改為上下排列 */
+            @media (max-width: 768px) {
+                .container {
+                    flex-direction: column;
+                }
+                .instructions-section {
+                    margin-top: 1rem;
+                }
+            }
+        </style>
     </head>
 
     <body onload="main()">
-        <canvas id="webgl" width = "400" height = "400">
-            Please use a browser that support "canvas"
-        </canvas>
+        <div class="container">
+            <div class="canvas-section">
+                <canvas id="webgl" width="400" height="400">
+                    Please use a browser that supports "canvas".
+                </canvas>
+            </div>
+
+            <div class="instructions-section">
+                <h1>CSU0021 - Homework 1</h1>
+
+                <h2>🖱️ How to Draw</h2>
+                <ul>
+                    <li>
+                        <strong>Left Click</strong> on the canvas to draw the
+                        current shape with the current color.
+                    </li>
+                </ul>
+
+                <h2>📐 Change Shapes</h2>
+                <ul>
+                    <li>Press <kbd>1</kbd> or <kbd>P</kbd> : Point</li>
+                    <li>Press <kbd>2</kbd> or <kbd>T</kbd> : Triangle</li>
+                    <li>Press <kbd>3</kbd> or <kbd>C</kbd> : Circle</li>
+                    <li>Press <kbd>4</kbd> or <kbd>S</kbd> : Square</li>
+                </ul>
+
+                <h2>🎨 Change Colors</h2>
+                <ul>
+                    <li>Press <kbd>R</kbd> : Red</li>
+                    <li>Press <kbd>G</kbd> : Green</li>
+                    <li>Press <kbd>B</kbd> : Blue</li>
+                </ul>
+
+                <div class="note">
+                    <strong>Rule Note:</strong><br />
+                    Only the last 3 shapes of each type will be kept on the
+                    screen. Single <code>gl.drawArrays()</code> per shape type
+                    is implemented via VBO batch rendering.
+                </div>
+            </div>
+        </div>
+
         <script src="WebGL.js"></script>
     </body>
 </html>
-
-
