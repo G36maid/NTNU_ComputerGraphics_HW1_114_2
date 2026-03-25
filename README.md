@@ -6,6 +6,16 @@
 
 Simply open `index.html` in a modern web browser that supports WebGL (Chrome, Firefox, Safari, Edge). No build step or installation required.
 
+### GitHub Pages Deployment
+
+This project is deployed on GitHub Pages. You can access the live application at:
+
+```
+https://yourusername.github.io/NTNU_ComputerGraphics_HW1_114_2/
+```
+
+The GitHub Pages deployment provides instant access to the application without any local setup required.
+
 ### Controls
 
 **Shape Selection** (Press keys on keyboard):
@@ -93,6 +103,14 @@ You must schedule a time with the TA to demonstrate your homework:
 - `NTNU_ComputerGraphics_HW1__114_2_.pdf` - Original assignment description
 
 ## Getting Started
+
+### Option 1: GitHub Pages (Recommended)
+
+1. Visit the live deployment: `https://yourusername.github.io/NTNU_ComputerGraphics_HW1_114_2/`
+2. The application will load automatically in your browser
+3. No additional setup required
+
+### Option 2: Local Development
 
 1. Clone or download this repository
 2. Open `index.html` in a web browser to test your implementation
