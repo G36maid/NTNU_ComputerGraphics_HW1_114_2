@@ -1,5 +1,33 @@
 # Computer Graphics Homework 1
 
+## How to Use
+
+### Running the Application
+
+Simply open `index.html` in a modern web browser that supports WebGL (Chrome, Firefox, Safari, Edge). No build step or installation required.
+
+### Controls
+
+**Shape Selection** (Press keys on keyboard):
+- `1` or `P` - Point
+- `2` or `T` - Triangle
+- `3` or `C` - Circle
+- `4` or `S` - Square
+
+**Color Selection** (Press keys on keyboard):
+- `R` - Red
+- `G` - Green
+- `B` - Blue
+
+**Drawing:**
+- Click anywhere on the black canvas to draw the selected shape at that position
+
+### Behavior
+
+- Each shape type keeps only the last 3 shapes visible (FIFO queue)
+- When you draw the 4th shape of any type, the oldest one is automatically removed
+- Example: Drawing 4 triangles will show triangles #2, #3, and #4; triangle #1 disappears
+
 ## Overview
 
 This is a WebGL programming assignment for CSU0021: Computer Graphics at NTNU.
