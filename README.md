@@ -38,7 +38,7 @@ The GitHub Pages deployment provides instant access to the application without a
 
 ## Overview
 
-This is a WebGL programming assignment for CSU0021: Computer Graphics at NTNU.
+This is a WebGL programming application for drawing shapes.
 
 ## Task Description
 
@@ -63,42 +63,14 @@ Implement a WebGL program that allows users to draw four different shapes with t
   - Example: If you need to draw 3 triangles, call `gl.drawArrays()` only once for all 3 triangles
   - You will not receive any points if you do not follow this requirement
 
-## Demo Video
 
-[Watch the demo on YouTube](https://www.youtube.com/watch?v=Qnxa1kHaC1Y&ab_channel=Ko-ChihWang)
 
-## Submission Guidelines
 
-### File Requirements
-
-1. Put all files (`index.html`, JavaScript files) in a folder
-2. Compress (zip) the folder
-3. Rename the zip file to your student ID (e.g., `407470888s.zip`)
-4. Submit to Moodle before the deadline
-
-**Important**: Ensure that TA can unzip the file and drag `index.html` to the browser to run without any extra work. Failure to follow this rule will result in a penalty.
-
-### Late Submission
-
-Late submissions will incur penalties according to the course policy.
-
-### Demonstration
-
-You must schedule a time with the TA to demonstrate your homework:
-
-1. **Book a 5-minute time slot**: before the Moodle submission deadline
-2. **Bring your laptop** (or make a note if you won't when booking)
-3. **Arrive on time**
-4. **Location**: Room 109, Applied Science Building
-5. **TA Email**: 61147074s@gapps.ntnu.edu.tw
-
-**Note**: If you submit late, you must email the TA and book a new demonstration time. Otherwise, you will not receive any points.
 
 ## Files
 
-- `index.html` - Main HTML file
-- `Homework1-Demo.mov` - Demo video showing expected behavior
-- `NTNU_ComputerGraphics_HW1__114_2_.pdf` - Original assignment description
+- `index.html` - Main HTML file with canvas setup
+- `WebGL.js` - WebGL rendering and shape drawing logic
 
 ## Getting Started
 
@@ -114,7 +86,4 @@ You must schedule a time with the TA to demonstrate your homework:
 2. Open `index.html` in a web browser to test your implementation
 3. Ensure all JavaScript files are properly linked
 
----
 
-**Course**: CSU0021: Computer Graphics
-**Institution**: NTNU (National Taiwan Normal University)
