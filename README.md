@@ -22,10 +22,11 @@ The GitHub Pages deployment provides instant access to the application without a
 - `3` or `C` - Circle
 - `4` or `S` - Square
 
-**Color Selection** (Press keys on keyboard):
-- `R` - Red
-- `G` - Green
-- `B` - Blue
+**Color Selection**:
+- **Keyboard shortcuts**: Press `R` for Red, `G` for Green, or `B` for Blue
+- **Color Picker**: Use the color picker UI to select any color or paste a HEX value
+
+
 
 **Drawing:**
 - Click anywhere on the black canvas to draw the selected shape at that position
@@ -74,16 +75,6 @@ Implement a WebGL program that allows users to draw four different shapes with t
 
 ## Getting Started
 
-### Option 1: GitHub Pages (Recommended)
-
-1. Visit the live deployment: [https://G36maid.github.io/NTNU_ComputerGraphics_HW1_114_2/](https://G36maid.github.io/NTNU_ComputerGraphics_HW1_114_2/)
-2. The application will load automatically in your browser
-3. No additional setup required
-
-### Option 2: Local Development
-
 1. Clone or download this repository
 2. Open `index.html` in a web browser to test your implementation
 3. Ensure all JavaScript files are properly linked
-
-
