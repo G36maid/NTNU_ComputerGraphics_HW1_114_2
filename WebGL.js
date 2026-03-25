@@ -5,7 +5,7 @@ var VSHADER_SOURCE = `
     varying vec4 v_Color;
     void main() {
         gl_Position = a_Position;
-        gl_PointSize = 15.0; // Slightly larger, make points more visible
+        gl_PointSize = 5.0;
         v_Color = a_Color;
     }
 `;
