@@ -18,9 +18,8 @@ var FSHADER_SOURCE = `
     }
 `;
 
-// State management: default to point, red
+// State management: default to point
 var shapeFlag = "p";
-var colorFlag = "r";
 
 // Array management
 var g_points = [];
@@ -96,7 +95,8 @@ function createProgram(gl, vertexShader, fragmentShader) {
 }
 
 function keydown(ev) {
-  var key = ev.key.toLowerCase(); // Convert to lowercase for case-insensitive input
+  var key = ev.key.toLowerCase();
+  var colorPicker = document.getElementById("colorPicker");
 
   // Shape switching
   if (key === "1" || key === "p") {
@@ -108,13 +108,13 @@ function keydown(ev) {
   } else if (key === "4" || key === "s") {
     shapeFlag = "s";
   }
-  // Color switching
+  // Color switching (syncs with the frontend input display)
   else if (key === "r") {
-    colorFlag = "r";
+    colorPicker.value = "#ff0000";
   } else if (key === "g") {
-    colorFlag = "g";
+    colorPicker.value = "#00ff00";
   } else if (key === "b") {
-    colorFlag = "b";
+    colorPicker.value = "#0000ff";
   }
 }
 
@@ -146,83 +146,120 @@ function click(ev, gl) {
 }
 
 function getColor() {
-  if (colorFlag === "r") return [1.0, 0.0, 0.0, 1.0];
-  if (colorFlag === "g") return [0.0, 1.0, 0.0, 1.0];
-  return [0.0, 0.0, 1.0, 1.0];
+  // Read the value from the HTML input (format is "#rrggbb")
+  var hex = document.getElementById("colorPicker").value;
+
+  // Slice the HEX string and convert to decimal (0~255), then divide by 255 to convert to WebGL's 0.0~1.0 format
+  var r = parseInt(hex.substring(1, 3), 16) / 255.0;
+  var g = parseInt(hex.substring(3, 5), 16) / 255.0;
+  var b = parseInt(hex.substring(5, 7), 16) / 255.0;
+
+  // Alpha channel defaults to 1.0 (opaque)
+  return [r, g, b, 1.0];
 }
 
 function draw(gl) {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // Points use gl.POINTS rendering
-  drawShapes(gl, g_points, gl.POINTS);
-  // Other area shapes are decomposed into triangles using gl.TRIANGLES
-  drawShapes(gl, g_triangles, gl.TRIANGLES);
-  drawShapes(gl, g_circles, gl.TRIANGLES);
-  drawShapes(gl, g_squares, gl.TRIANGLES);
-}
+  // Concatenate all vertex arrays of shapes on the screen (max 12)
+  var allVertices = [];
+  var arraysToDraw = [g_points, g_triangles, g_circles, g_squares];
 
-function drawShapes(gl, shapes, mode) {
-  if (shapes.length === 0) return;
-
-  var vertices = [];
-  for (var i = 0; i < shapes.length; i++) {
-    vertices = vertices.concat(shapes[i]);
+  for (var i = 0; i < arraysToDraw.length; i++) {
+    var shapeArray = arraysToDraw[i];
+    for (var j = 0; j < shapeArray.length; j++) {
+      allVertices = allVertices.concat(shapeArray[j]);
+    }
   }
 
+  if (allVertices.length === 0) return;
+
+  // send array to VBO
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(allVertices), gl.STATIC_DRAW);
 
   var FSIZE = Float32Array.BYTES_PER_ELEMENT;
   gl.vertexAttribPointer(gl.a_Position, 2, gl.FLOAT, false, FSIZE * 6, 0);
   gl.vertexAttribPointer(gl.a_Color, 4, gl.FLOAT, false, FSIZE * 6, FSIZE * 2);
 
-  gl.drawArrays(mode, 0, vertices.length / 6);
+  // Draw the entire screen, regardless of what shapes.
+  gl.drawArrays(gl.TRIANGLES, 0, allVertices.length / 6);
 }
 
 // === Shape generation logic ===
 
-function addPoint(x, y, color) {
-  // A point only needs to push itself
-  var vertices = [x, y, color[0], color[1], color[2], color[3]];
-  addToShapeArray(g_points, vertices);
+function createSquareVertices(x, y, size, color) {
+  return [
+    // first triangle (top-left, bottom-left, bottom-right)
+    x - size,
+    y + size,
+    color[0],
+    color[1],
+    color[2],
+    color[3],
+    x - size,
+    y - size,
+    color[0],
+    color[1],
+    color[2],
+    color[3],
+    x + size,
+    y - size,
+    color[0],
+    color[1],
+    color[2],
+    color[3],
+    // second triangle (top-left, bottom-right, top-right)
+    x - size,
+    y + size,
+    color[0],
+    color[1],
+    color[2],
+    color[3],
+    x + size,
+    y - size,
+    color[0],
+    color[1],
+    color[2],
+    color[3],
+    x + size,
+    y + size,
+    color[0],
+    color[1],
+    color[2],
+    color[3],
+  ];
 }
 
-function addTriangle(x, y, color) {
-  var size = 0.1;
-  // To draw a proper equilateral triangle, calculations require trigonometry for base width and center
-  var c30 = Math.cos(Math.PI / 6) * size; // 0.866 * size
-  var s30 = Math.sin(Math.PI / 6) * size; // 0.5 * size
-
-  var vertices = [
+function createTriangleVertices(x, y, size, color) {
+  var c30 = Math.cos(Math.PI / 6) * size;
+  var s30 = Math.sin(Math.PI / 6) * size;
+  return [
     x,
     y + size,
     color[0],
     color[1],
     color[2],
-    color[3], // Top
+    color[3],
     x - c30,
     y - s30,
     color[0],
     color[1],
     color[2],
-    color[3], // Bottom-left
+    color[3],
     x + c30,
     y - s30,
     color[0],
     color[1],
     color[2],
-    color[3], // Bottom-right
+    color[3],
   ];
-  addToShapeArray(g_triangles, vertices);
 }
 
-function addCircle(x, y, color) {
+function createCircleVertices(x, y, radius, color) {
   var vertices = [];
-  var radius = 0.1;
   var segments = 30;
-
   for (var i = 0; i < segments; i++) {
     var angle1 = (i / segments) * 2 * Math.PI;
     var angle2 = ((i + 1) / segments) * 2 * Math.PI;
@@ -245,58 +282,39 @@ function addCircle(x, y, color) {
       color[3],
     );
   }
+  return vertices;
+}
 
-  addToShapeArray(g_circles, vertices);
+// helper functions
+
+function addPoint(x, y, color) {
+  var size = 0.005;
+  var vertices = createSquareVertices(x, y, size, color);
+  addToShapeArray(g_points, vertices);
 }
 
 function addSquare(x, y, color) {
-  var size = 0.08; // Slightly smaller for visual consistency with other shapes
-  var vertices = [
-    // First triangle (top-left, bottom-left, bottom-right)
-    x - size,
-    y + size,
-    color[0],
-    color[1],
-    color[2],
-    color[3],
-    x - size,
-    y - size,
-    color[0],
-    color[1],
-    color[2],
-    color[3],
-    x + size,
-    y - size,
-    color[0],
-    color[1],
-    color[2],
-    color[3],
-    // Second triangle (top-left, bottom-right, top-right)
-    x - size,
-    y + size,
-    color[0],
-    color[1],
-    color[2],
-    color[3],
-    x + size,
-    y - size,
-    color[0],
-    color[1],
-    color[2],
-    color[3],
-    x + size,
-    y + size,
-    color[0],
-    color[1],
-    color[2],
-    color[3],
-  ];
+  var size = 0.1;
+  var vertices = createSquareVertices(x, y, size, color);
   addToShapeArray(g_squares, vertices);
 }
 
+function addTriangle(x, y, color) {
+  var size = 0.1;
+  var vertices = createTriangleVertices(x, y, size, color);
+  addToShapeArray(g_triangles, vertices);
+}
+
+function addCircle(x, y, color) {
+  var radius = 0.1;
+  var vertices = createCircleVertices(x, y, radius, color);
+  addToShapeArray(g_circles, vertices);
+}
+
+// helper function for shape array management
 function addToShapeArray(array, vertices) {
   array.push(vertices);
   if (array.length > 3) {
-    array.shift();
+    array.shift(); // FIFO
   }
 }

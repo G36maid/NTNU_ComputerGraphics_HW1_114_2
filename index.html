@@ -112,7 +112,7 @@
                 color: #856404;
             }
 
-            /* 響應式設計：小螢幕時改為上下排列 */
+            /* Responsive design: switch to vertical layout on small screens */
             @media (max-width: 768px) {
                 .container {
                     flex-direction: column;
@@ -158,11 +158,36 @@
                     <li>Press <kbd>B</kbd> : Blue</li>
                 </ul>
 
+                <h2>🎨 Choose Color</h2>
+                <div
+                    style="
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        margin-bottom: 0.8rem;
+                    "
+                >
+                    <input
+                        type="color"
+                        id="colorPicker"
+                        value="#ff0000"
+                        style="
+                            width: 50px;
+                            height: 30px;
+                            border: none;
+                            cursor: pointer;
+                            padding: 0;
+                        "
+                    />
+                    <label for="colorPicker" style="color: var(--text-muted)"
+                        >Pick a color or paste HEX</label
+                    >
+                </div>
+
                 <div class="note">
                     <strong>Rule Note:</strong><br />
                     Only the last 3 shapes of each type will be kept on the
-                    screen. Single <code>gl.drawArrays()</code> per shape type
-                    is implemented via VBO batch rendering.
+                    screen.
                 </div>
             </div>
         </div>
