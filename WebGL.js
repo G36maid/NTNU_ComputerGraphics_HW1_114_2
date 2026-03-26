@@ -162,29 +162,28 @@ function draw(gl) {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // Concatenate all vertex arrays of shapes on the screen (max 12)
-  var allVertices = [];
-  var arraysToDraw = [g_points, g_triangles, g_circles, g_squares];
+  drawShapes(gl, g_points, gl.TRIANGLES);
+  drawShapes(gl, g_triangles, gl.TRIANGLES);
+  drawShapes(gl, g_circles, gl.TRIANGLES);
+  drawShapes(gl, g_squares, gl.TRIANGLES);
+}
 
-  for (var i = 0; i < arraysToDraw.length; i++) {
-    var shapeArray = arraysToDraw[i];
-    for (var j = 0; j < shapeArray.length; j++) {
-      allVertices = allVertices.concat(shapeArray[j]);
-    }
+function drawShapes(gl, shapes, mode) {
+  if (shapes.length === 0) return;
+
+  var vertices = [];
+  for (var i = 0; i < shapes.length; i++) {
+    vertices = vertices.concat(shapes[i]);
   }
 
-  if (allVertices.length === 0) return;
-
-  // send array to VBO
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.vertexBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(allVertices), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
   var FSIZE = Float32Array.BYTES_PER_ELEMENT;
   gl.vertexAttribPointer(gl.a_Position, 2, gl.FLOAT, false, FSIZE * 6, 0);
   gl.vertexAttribPointer(gl.a_Color, 4, gl.FLOAT, false, FSIZE * 6, FSIZE * 2);
 
-  // Draw the entire screen, regardless of what shapes.
-  gl.drawArrays(gl.TRIANGLES, 0, allVertices.length / 6);
+  gl.drawArrays(mode, 0, vertices.length / 6);
 }
 
 // === Shape generation logic ===
